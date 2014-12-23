@@ -35,16 +35,6 @@ public class Share extends BufferedImage {
         return shareNum;
     }
 
-    @Override
-    public void setRGB(int x, int y, int rgb) {
-//        if (used(x, y)) {
-        used.put(x, y);
-        super.setRGB(x, y, rgb);
-//        } else {
-//            CryptIO.notifyErr("Attempted to add pixel at used space (" + x + ", " + y + ").");
-//        }
-    }
-
     public boolean used(int x, int y) {
         return used.get(x) != null;
     }

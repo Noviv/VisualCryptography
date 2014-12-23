@@ -1,22 +1,15 @@
-package visualcryptography.onebyone;
+package end;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import lib.visualcryptiography.crypt.MessageInput;
 import lib.visualcryptiography.crypt.Share;
-import lib.visualcryptiography.crypt.VisualScheme;
 import lib.visualcryptiography.io.CryptIO;
 import lib.visualcryptiography.util.PixelDistributionFactory;
 import lib.visualcryptiography.util.datastructures.PixelDistribution;
 
-public class OneByOne extends VisualScheme {
+public class Encryption {
 
-    public OneByOne() {
-        super(1, 1);
-    }
-
-    @Override
-    public void makeShares() {
+    public static void main(String[] args) {
         /*preprocess*/
         try {
             CryptIO.setup();
@@ -82,28 +75,6 @@ public class OneByOne extends VisualScheme {
 
         /*postprocess*/
         CryptIO.notifyProcess("Post-processing...");
-        shares[0] = s1;
         CryptIO.write(s1, "src/res/share" + s1.getShareNum() + ".png");
-    }
-
-    @Override
-    public void decryptShares(Share... shares) {
-        CryptIO.notifyProcess("Reading alpha values...");
-        Color c;
-        ArrayList<Integer> data = new ArrayList<>();
-        for (int y = 0; y < shares[0].getHeight(); y++) {
-            for (int x = 0; x < shares[0].getWidth(); x++) {
-                c = new Color(shares[0].getRGB(x, y), true);
-                if (c.getAlpha() != 255 && c.getAlpha() != 0) {
-                    data.add(c.getAlpha());
-                }
-            }
-        }
-
-        String message = "";
-        for (int i = 0; i < data.size(); i += 2) {
-            message += (char) ((255 - (int) data.get(i)) + (255 - (int) data.get(i + 1)));
-        }
-        CryptIO.notifyResult("MESSAGE: " + message);
     }
 }
