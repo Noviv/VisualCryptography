@@ -1,6 +1,7 @@
 package visualcryptography.onebyone;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import lib.visualcryptiography.crypt.MessageInput;
 import lib.visualcryptiography.crypt.Share;
@@ -8,11 +9,32 @@ import lib.visualcryptiography.crypt.VisualScheme;
 import lib.visualcryptiography.io.CryptIO;
 import lib.visualcryptiography.util.PixelDistributionFactory;
 import lib.visualcryptiography.util.datastructures.PixelDistribution;
+import lib.visualcryptiography.util.graphics.PixelDistributionAlphaLayerPlot;
 
 public class OneByOne extends VisualScheme {
 
     public OneByOne() {
         super(1, 1);
+    }
+
+    public void decryptImage(BufferedImage image) {
+        CryptIO.notifyProcess("Reading alpha values...");
+        Color c;
+        ArrayList<Integer> data = new ArrayList<>();
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                c = new Color(image.getRGB(x, y), true);
+                if (c.getAlpha() != 255 && c.getAlpha() != 0) {
+                    data.add(c.getAlpha());
+                }
+            }
+        }
+
+        String message = "";
+        for (int i = 0; i < data.size(); i += 2) {
+            message += (char) ((255 - (int) data.get(i)) + (255 - (int) data.get(i + 1)));
+        }
+        CryptIO.notifyResult("MESSAGE: " + message);
     }
 
     @Override
@@ -79,6 +101,9 @@ public class OneByOne extends VisualScheme {
 
             scatter += INITIAL_SCATTER;
         }
+
+        /*stats*/
+        PixelDistributionAlphaLayerPlot pdalp = new PixelDistributionAlphaLayerPlot(dist);
 
         /*postprocess*/
         CryptIO.notifyProcess("Post-processing...");
