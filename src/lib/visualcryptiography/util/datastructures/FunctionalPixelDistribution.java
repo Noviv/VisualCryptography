@@ -66,7 +66,7 @@ public class FunctionalPixelDistribution {
                         CryptIO.notifyErr("tempPixel null");
                         System.exit(1);
                     }
-                    if (VisualStats.innerComparePixel(pd_.getPixel(x, y), tempPixel, pd_)) {
+                    if (VisualStats.innerComparePixel(pd_.getPixel(x, y), tempPixel)) {
                         norm += dx;
                     } else {
                         norm -= dx;
@@ -78,7 +78,7 @@ public class FunctionalPixelDistribution {
                         CryptIO.notifyErr("tempPixel null");
                         System.exit(1);
                     }
-                    if (VisualStats.innerComparePixel(pd_.getPixel(x, y), tempPixel, pd_)) {
+                    if (VisualStats.innerComparePixel(pd_.getPixel(x, y), tempPixel)) {
                         norm += dx;
                     } else {
                         norm -= dx;
@@ -90,7 +90,7 @@ public class FunctionalPixelDistribution {
                         CryptIO.notifyErr("tempPixel null");
                         System.exit(1);
                     }
-                    if (VisualStats.innerComparePixel(pd_.getPixel(x, y), tempPixel, pd_)) {
+                    if (VisualStats.innerComparePixel(pd_.getPixel(x, y), tempPixel)) {
                         norm += dx;
                     } else {
                         norm -= dx;
@@ -102,7 +102,7 @@ public class FunctionalPixelDistribution {
                         CryptIO.notifyErr("tempPixel null");
                         System.exit(1);
                     }
-                    if (VisualStats.innerComparePixel(pd_.getPixel(x, y), tempPixel, pd_)) {
+                    if (VisualStats.innerComparePixel(pd_.getPixel(x, y), tempPixel)) {
                         norm += dx;
                     } else {
                         norm -= dx;

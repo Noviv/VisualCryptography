@@ -4,9 +4,10 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import lib.visualcryptiography.io.CryptIO;
 import lib.visualcryptiography.util.datastructures.Pixel;
-import lib.visualcryptiography.util.datastructures.PixelDistribution;
 
 public class VisualStats {
+
+    private static final int DIFF_CUTOFF_VALUE = 7;
 
     private VisualStats() {
     }
@@ -28,6 +29,7 @@ public class VisualStats {
         //mse calc
         mse *= 1.0 / (img1.getWidth() * img1.getHeight());
 
+        CryptIO.notifyResult("MSE: " + mse);
         CryptIO.notifyResult("PSNR: " + 10.0 * (Math.log10(255.0 * 255.0) / Math.log10(mse)));
     }
 
@@ -58,7 +60,7 @@ public class VisualStats {
         CryptIO.notifyResult("meanB: " + meanB);
     }
 
-    public static boolean innerComparePixel(Pixel p1, Pixel p2, PixelDistribution pd) {
-        return false;
+    public static boolean innerComparePixel(Pixel p1, Pixel p2) {
+        return Math.abs(p1.getRed() - p2.getRed()) < DIFF_CUTOFF_VALUE && Math.abs(p1.getGreen() - p2.getGreen()) < DIFF_CUTOFF_VALUE && Math.abs(p1.getBlue() - p2.getBlue()) < DIFF_CUTOFF_VALUE;
     }
 }

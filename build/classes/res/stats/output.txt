@@ -1,6 +1,11 @@
+INITIAL MESSAGE: this is a message
+
 meanR: 140.63585068184238
 meanG: 141.9628073406419
 meanB: 128.30554161406923
+MSE: 1.0645368504063463E13
 PSNR: 3.694650332336666
-MESSAGE: this is a message
+Output Message: this is a message
 
+Worked: true
+Duration: 24.56 seconds

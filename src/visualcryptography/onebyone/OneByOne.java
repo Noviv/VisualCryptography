@@ -13,11 +13,11 @@ import lib.visualcryptiography.util.datastructures.PixelDistribution;
 import lib.visualcryptiography.util.graphics.PixelDistributionAlphaLayerPlot;
 
 public class OneByOne extends VisualScheme {
-    
+
     public OneByOne() {
         super(1, 1);
     }
-    
+
     @Override
     public void makeShares() {
         final String currentImagePath = "src/res/house.jpg";
@@ -82,7 +82,7 @@ public class OneByOne extends VisualScheme {
                 s1.add(xVal, yVal, new Color(r, g, b, a1));
                 s1.add(xVal + 1, yVal, new Color(r, g, b, a2));
             }
-            
+
             scatter += INITIAL_SCATTER;
         }
 
@@ -96,7 +96,7 @@ public class OneByOne extends VisualScheme {
         shares[0] = s1;
         CryptIO.write(s1, "src/res/share" + s1.getShareNum() + ".png");
     }
-    
+
     @Override
     public void decryptShares(Share... shares) {
         CryptIO.notifyProcess("Reading alpha values...");
@@ -110,18 +110,19 @@ public class OneByOne extends VisualScheme {
                 }
             }
         }
-        
+
         String message = "";
         for (int i = 0; i < data.size(); i += 2) {
             message += (char) ((255 - (int) data.get(i)) + (255 - (int) data.get(i + 1)));
         }
-        CryptIO.notifyResult("MESSAGE: " + message);
+        CryptIO.notifyResult("Output Message: " + message);
+        CryptIO.notifyResult("Worked: " + message.equals(CryptIO.readText()));
         try {
             CryptIO.close();
         } catch (Exception e) {
         }
     }
-    
+
     public void decryptImage(BufferedImage image) {
         CryptIO.notifyProcess("Reading alpha values...");
         Color c;
@@ -134,12 +135,13 @@ public class OneByOne extends VisualScheme {
                 }
             }
         }
-        
+
         String message = "";
         for (int i = 0; i < data.size(); i += 2) {
             message += (char) ((255 - (int) data.get(i)) + (255 - (int) data.get(i + 1)));
         }
         CryptIO.notifyResult("MESSAGE: " + message);
+        CryptIO.notifyResult("WORKED: " + message.equals(CryptIO.readText()));
         try {
             CryptIO.close();
         } catch (Exception e) {

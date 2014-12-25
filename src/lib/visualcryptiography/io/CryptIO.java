@@ -11,6 +11,8 @@ import javax.imageio.ImageIO;
 
 public class CryptIO {
 
+    private static long initialMs;
+    private static long durationMs;
     private static File dataFile;
     private static BufferedImage image;
     private static boolean on = true;
@@ -114,11 +116,14 @@ public class CryptIO {
 
     public static void setup() throws IOException {
         notifyProcess("CryptIO setup...");
+        initialMs = System.currentTimeMillis();
         dataFile = (dataFile == null ? dataFile = new File("src/res/data.txt") : dataFile);
         dataFile.createNewFile();
     }
 
     public static void close() throws IOException {
+        durationMs = System.currentTimeMillis() - initialMs;
+        CryptIO.notifyResult("Duration: " + durationMs / 1000.0 + " seconds");
         if (bw != null) {
             bw.close();
         }
