@@ -8,37 +8,20 @@ import lib.visualcryptiography.crypt.Share;
 import lib.visualcryptiography.crypt.VisualScheme;
 import lib.visualcryptiography.io.CryptIO;
 import lib.visualcryptiography.util.PixelDistributionFactory;
+import lib.visualcryptiography.util.VisualStats;
 import lib.visualcryptiography.util.datastructures.PixelDistribution;
 import lib.visualcryptiography.util.graphics.PixelDistributionAlphaLayerPlot;
 
 public class OneByOne extends VisualScheme {
-
+    
     public OneByOne() {
         super(1, 1);
     }
-
-    public void decryptImage(BufferedImage image) {
-        CryptIO.notifyProcess("Reading alpha values...");
-        Color c;
-        ArrayList<Integer> data = new ArrayList<>();
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                c = new Color(image.getRGB(x, y), true);
-                if (c.getAlpha() != 255 && c.getAlpha() != 0) {
-                    data.add(c.getAlpha());
-                }
-            }
-        }
-
-        String message = "";
-        for (int i = 0; i < data.size(); i += 2) {
-            message += (char) ((255 - (int) data.get(i)) + (255 - (int) data.get(i + 1)));
-        }
-        CryptIO.notifyResult("MESSAGE: " + message);
-    }
-
+    
     @Override
     public void makeShares() {
+        final String currentImagePath = "src/res/house.jpg";
+
         /*preprocess*/
         try {
             CryptIO.setup();
@@ -46,7 +29,8 @@ public class OneByOne extends VisualScheme {
         }
         CryptIO.notifyProcess("Pre-processing...");
         MessageInput input = new MessageInput(CryptIO.readText());
-        Color[][] pixels = CryptIO.readPixels("src/res/house.jpg");
+        CryptIO.notifyResult("INITIAL MESSAGE: " + input.getRaw(), false);
+        Color[][] pixels = CryptIO.readPixels(currentImagePath);
         Share s1 = new Share(1, pixels.length, pixels[0].length);
 
         /*create distributions*/
@@ -98,19 +82,21 @@ public class OneByOne extends VisualScheme {
                 s1.add(xVal, yVal, new Color(r, g, b, a1));
                 s1.add(xVal + 1, yVal, new Color(r, g, b, a2));
             }
-
+            
             scatter += INITIAL_SCATTER;
         }
 
         /*stats*/
         PixelDistributionAlphaLayerPlot pdalp = new PixelDistributionAlphaLayerPlot(dist);
+        VisualStats.runAverage(s1);
+        VisualStats.runPSNR(CryptIO.readImage(currentImagePath), s1);
 
         /*postprocess*/
         CryptIO.notifyProcess("Post-processing...");
         shares[0] = s1;
         CryptIO.write(s1, "src/res/share" + s1.getShareNum() + ".png");
     }
-
+    
     @Override
     public void decryptShares(Share... shares) {
         CryptIO.notifyProcess("Reading alpha values...");
@@ -124,11 +110,39 @@ public class OneByOne extends VisualScheme {
                 }
             }
         }
-
+        
         String message = "";
         for (int i = 0; i < data.size(); i += 2) {
             message += (char) ((255 - (int) data.get(i)) + (255 - (int) data.get(i + 1)));
         }
         CryptIO.notifyResult("MESSAGE: " + message);
+        try {
+            CryptIO.close();
+        } catch (Exception e) {
+        }
+    }
+    
+    public void decryptImage(BufferedImage image) {
+        CryptIO.notifyProcess("Reading alpha values...");
+        Color c;
+        ArrayList<Integer> data = new ArrayList<>();
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                c = new Color(image.getRGB(x, y), true);
+                if (c.getAlpha() != 255 && c.getAlpha() != 0) {
+                    data.add(c.getAlpha());
+                }
+            }
+        }
+        
+        String message = "";
+        for (int i = 0; i < data.size(); i += 2) {
+            message += (char) ((255 - (int) data.get(i)) + (255 - (int) data.get(i + 1)));
+        }
+        CryptIO.notifyResult("MESSAGE: " + message);
+        try {
+            CryptIO.close();
+        } catch (Exception e) {
+        }
     }
 }

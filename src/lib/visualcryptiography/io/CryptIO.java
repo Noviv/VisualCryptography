@@ -2,36 +2,58 @@ package lib.visualcryptiography.io;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
 
 public class CryptIO {
-    
+
     private static File dataFile;
     private static BufferedImage image;
     private static boolean on = true;
-    
+    private static BufferedWriter bw = null;
+
     private CryptIO() {
     }
-    
+
     public static void notifyProcess(String msg) {
         System.out.println("~~" + msg);
     }
-    
+
     public static void notifySubProcess(String msg) {
         System.out.println("~~~~" + msg);
     }
-    
+
     public static void notifyErr(Object msg) {
-        System.err.println("~~" + msg);
+        System.out.println("~~" + msg + "                                   !!");
     }
-    
+
+    public static void notifyResult(Object msg, boolean outWrite) {
+        if (bw == null) {
+            try {
+                bw = new BufferedWriter(new FileWriter(new File("src/res/stats/output.txt")));
+            } catch (Exception e) {
+                CryptIO.notifyErr("Failed to initialize writer.");
+            }
+        }
+        try {
+            bw.write(msg + "\n");
+            bw.flush();
+        } catch (Exception e) {
+            CryptIO.notifyErr("Failed to write a result: " + msg);
+        }
+        if (outWrite) {
+            System.out.println(msg);
+        }
+    }
+
     public static void notifyResult(Object msg) {
-        System.out.println(String.format("%-20s", msg));
+        CryptIO.notifyResult(msg, true);
     }
-    
+
     public static String readText() {
         String data = "";
         Scanner reader = null;
@@ -45,7 +67,7 @@ public class CryptIO {
         reader.close();
         return data;
     }
-    
+
     public static BufferedImage readImage(String filePath) {
         try {
             File f = new File(filePath);
@@ -55,7 +77,7 @@ public class CryptIO {
             return null;
         }
     }
-    
+
     public static Color[][] readPixels(String filePath) {
         try {
             File f = new File(filePath);
@@ -71,7 +93,7 @@ public class CryptIO {
         }
         return pixels;
     }
-    
+
     public static boolean write(BufferedImage toWrite, String name) {
         try {
             File f = new File(name);
@@ -89,10 +111,16 @@ public class CryptIO {
             return false;
         }
     }
-    
+
     public static void setup() throws IOException {
         notifyProcess("CryptIO setup...");
         dataFile = (dataFile == null ? dataFile = new File("src/res/data.txt") : dataFile);
         dataFile.createNewFile();
+    }
+
+    public static void close() throws IOException {
+        if (bw != null) {
+            bw.close();
+        }
     }
 }
