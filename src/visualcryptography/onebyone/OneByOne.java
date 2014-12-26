@@ -10,7 +10,6 @@ import lib.visualcryptiography.io.CryptIO;
 import lib.visualcryptiography.util.PixelDistributionFactory;
 import lib.visualcryptiography.util.VisualStats;
 import lib.visualcryptiography.util.datastructures.PixelDistribution;
-import lib.visualcryptiography.util.graphics.PixelDistributionAlphaLayerPlot;
 
 public class OneByOne extends VisualScheme {
 
@@ -87,7 +86,7 @@ public class OneByOne extends VisualScheme {
         }
 
         /*stats*/
-        PixelDistributionAlphaLayerPlot pdalp = new PixelDistributionAlphaLayerPlot(dist);
+        VisualStats.runAlphaLayerPlot(dist);
         VisualStats.runAverage(s1);
         VisualStats.runPSNR(CryptIO.readImage(currentImagePath), s1);
 

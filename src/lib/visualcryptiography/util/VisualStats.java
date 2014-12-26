@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import lib.visualcryptiography.io.CryptIO;
 import lib.visualcryptiography.util.datastructures.Pixel;
+import lib.visualcryptiography.util.datastructures.PixelDistribution;
 
 public class VisualStats {
 
@@ -60,7 +61,39 @@ public class VisualStats {
         CryptIO.notifyResult("meanB: " + meanB);
     }
 
+    public static void runAlphaLayerPlot(PixelDistribution pd) {
+        CryptIO.notifyProcess("Creating alpha layer plots...");
+
+        Color[][] r = new Color[pd.getWidth()][pd.getHeight()];
+        Color[][] g = new Color[pd.getWidth()][pd.getHeight()];
+        Color[][] b = new Color[pd.getWidth()][pd.getHeight()];
+        BufferedImage rI = new BufferedImage(pd.getWidth(), pd.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+        BufferedImage gI = new BufferedImage(pd.getWidth(), pd.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+        BufferedImage bI = new BufferedImage(pd.getWidth(), pd.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+
+        for (int x = 0; x < pd.getWidth(); x++) {
+            for (int y = 0; y < pd.getHeight(); y++) {
+                r[x][y] = genColor(Color.RED, pd.getPixel(x, y).getRed());
+                g[x][y] = genColor(Color.GREEN, pd.getPixel(x, y).getGreen());
+                b[x][y] = genColor(Color.BLUE, pd.getPixel(x, y).getBlue());
+                rI.setRGB(x, y, r[x][y].getRGB());
+                gI.setRGB(x, y, g[x][y].getRGB());
+                bI.setRGB(x, y, b[x][y].getRGB());
+            }
+        }
+
+        CryptIO.write(rI, "src/res/stats/rI.png");
+        CryptIO.write(gI, "src/res/stats/gI.png");
+        CryptIO.write(bI, "src/res/stats/bI.png");
+        CryptIO.notifyProcess("Finished creating alpha layer plot images.");
+    }
+
     public static boolean innerComparePixel(Pixel p1, Pixel p2) {
         return Math.abs(p1.getRed() - p2.getRed()) < DIFF_CUTOFF_VALUE && Math.abs(p1.getGreen() - p2.getGreen()) < DIFF_CUTOFF_VALUE && Math.abs(p1.getBlue() - p2.getBlue()) < DIFF_CUTOFF_VALUE;
+    }
+
+    /*private methods*/
+    private static Color genColor(Color base, int alpha) {
+        return new Color(base.getRed(), base.getGreen(), base.getBlue(), alpha);
     }
 }
