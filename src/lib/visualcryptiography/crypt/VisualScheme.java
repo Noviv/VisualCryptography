@@ -9,7 +9,7 @@ public abstract class VisualScheme {
     protected Share[] shares;
 
     public VisualScheme(int k, int n) {
-        CryptIO.notifyProcess("Initialized (" + k + ", " + n + ") VS.");
+        CryptIO.notify("Initialized (" + k + ", " + n + ") VS.");
         if (k > n) {
             System.err.println("Cannot make (k, n) where k > n.");
         }

@@ -15,7 +15,7 @@ public class Share extends BufferedImage {
         used = new HashMap<>();
         this.shareNum = shareNum;
 
-        CryptIO.notifyProcess("Created share " + shareNum);
+        CryptIO.notify("Created share " + shareNum);
     }
 
     public void add(int origX, int origY, Color[] subpixelBlocks) {

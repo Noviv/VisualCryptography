@@ -26,16 +26,16 @@ public class OneByOne extends VisualScheme {
             CryptIO.setup();
         } catch (Exception e) {
         }
-        CryptIO.notifyProcess("Pre-processing...");
+        CryptIO.notify("Pre-processing...");
         MessageInput input = new MessageInput(CryptIO.readText());
         CryptIO.notifyResult("INITIAL MESSAGE: " + input.getRaw(), false);
         Color[][] pixels = CryptIO.readPixels(currentImagePath);
         Share s1 = new Share(1, pixels.length, pixels[0].length);
 
         /*create distributions*/
-        CryptIO.notifyProcess("Creating distributions...");
+        CryptIO.notify("Creating distributions...");
         PixelDistribution dist = PixelDistributionFactory.createDistribution(pixels);
-        CryptIO.notifyProcess("Finished creating distributions.");
+        CryptIO.notify("Finished creating distributions.");
 
         //scatter
         for (int x = 0; x < dist.getWidth(); x++) {
@@ -45,7 +45,7 @@ public class OneByOne extends VisualScheme {
         }
         int scatter = dist.getNumPixels() / input.getASCIIValues().size();
         final int INITIAL_SCATTER = scatter;
-        CryptIO.notifySubProcess("Writing basic phase pixels to image...");
+        CryptIO.notify("Writing basic phase pixels to image...");
         for (int x = 0; x < input.getASCIIValues().size(); x++) {
             int temp = scatter;
             int count = 0;
@@ -91,39 +91,18 @@ public class OneByOne extends VisualScheme {
         VisualStats.runPSNR(CryptIO.readImage(currentImagePath), s1);
 
         /*postprocess*/
-        CryptIO.notifyProcess("Post-processing...");
+        CryptIO.notify("Post-processing...");
         shares[0] = s1;
         CryptIO.write(s1, "src/res/share" + s1.getShareNum() + ".png");
     }
 
     @Override
     public void decryptShares(Share... shares) {
-        CryptIO.notifyProcess("Reading alpha values...");
-        Color c;
-        ArrayList<Integer> data = new ArrayList<>();
-        for (int y = 0; y < shares[0].getHeight(); y++) {
-            for (int x = 0; x < shares[0].getWidth(); x++) {
-                c = new Color(shares[0].getRGB(x, y), true);
-                if (c.getAlpha() != 255 && c.getAlpha() != 0) {
-                    data.add(c.getAlpha());
-                }
-            }
-        }
-
-        String message = "";
-        for (int i = 0; i < data.size(); i += 2) {
-            message += (char) ((255 - (int) data.get(i)) + (255 - (int) data.get(i + 1)));
-        }
-        CryptIO.notifyResult("Output Message: " + message);
-        CryptIO.notifyResult("Worked: " + message.equals(CryptIO.readText()));
-        try {
-            CryptIO.close();
-        } catch (Exception e) {
-        }
+        decryptImage(shares[0]);
     }
 
     public void decryptImage(BufferedImage image) {
-        CryptIO.notifyProcess("Reading alpha values...");
+        CryptIO.notify("Reading alpha values...");
         Color c;
         ArrayList<Integer> data = new ArrayList<>();
         for (int y = 0; y < image.getHeight(); y++) {
@@ -139,8 +118,8 @@ public class OneByOne extends VisualScheme {
         for (int i = 0; i < data.size(); i += 2) {
             message += (char) ((255 - (int) data.get(i)) + (255 - (int) data.get(i + 1)));
         }
-        CryptIO.notifyResult("MESSAGE: " + message);
-        CryptIO.notifyResult("WORKED: " + message.equals(CryptIO.readText()));
+        CryptIO.notifyResult("Output Message: " + message);
+        CryptIO.notifyResult("Worked: " + message.equals(CryptIO.readText()));
         try {
             CryptIO.close();
         } catch (Exception e) {

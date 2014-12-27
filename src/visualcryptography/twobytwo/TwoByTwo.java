@@ -3,9 +3,9 @@ package visualcryptography.twobytwo;
 import java.awt.Color;
 import java.io.IOException;
 import lib.visualcryptiography.crypt.Share;
-import lib.visualcryptiography.crypt.ShareUtil;
 import lib.visualcryptiography.crypt.VisualScheme;
 import lib.visualcryptiography.io.CryptIO;
+import lib.visualcryptiography.util.CryptUtil;
 
 public class TwoByTwo extends VisualScheme {
 
@@ -24,7 +24,7 @@ public class TwoByTwo extends VisualScheme {
         Share s1 = new Share(1, flags.length * 4, flags[0].length * 4);
         Share s2 = new Share(2, flags.length * 4, flags[0].length * 4);
 
-        CryptIO.notifyProcess("Reading pixel flags...");
+        CryptIO.notify("Reading pixel flags...");
         for (int i = 0; i < flags.length; i++) {
             for (int o = 0; o < flags.length; o++) {
                 if (flags[i][o] == TwoByTwo.ReadState.ERROR) {
@@ -71,7 +71,7 @@ public class TwoByTwo extends VisualScheme {
         shares[0] = s1;
         shares[1] = s2;
 
-        CryptIO.notifyProcess("Writing shares...");
+        CryptIO.notify("Writing shares...");
         CryptIO.write(s1, "src/res/share" + s1.getShareNum() + ".png");
         CryptIO.write(s2, "src/res/share" + s2.getShareNum() + ".png");
     }
@@ -110,7 +110,7 @@ public class TwoByTwo extends VisualScheme {
     }
 
     private ReadState[][] getPixelFlags() {
-        CryptIO.notifyProcess("Reading pixel flags...");
+        CryptIO.notify("Reading pixel flags...");
         Color[][] pixels = CryptIO.readPixels("src/res/tbtInputImage.png");
         ReadState[][] flags = new ReadState[pixels.length][];
         for (int x = 0; x < pixels.length; x++) {
@@ -123,7 +123,7 @@ public class TwoByTwo extends VisualScheme {
                 } else {
                     flags[x][y] = ReadState.ERROR;
                 }
-                CryptIO.notifySubProcess("Pixel state at " + x + ", " + y + ": " + flags[x][y]);
+                CryptIO.notify("Pixel state at " + x + ", " + y + ": " + flags[x][y]);
             }
         }
         return flags;
@@ -147,6 +147,6 @@ public class TwoByTwo extends VisualScheme {
 
     @Override
     public void decryptShares(Share... shares) {
-        CryptIO.write(ShareUtil.overlayTwoShares(shares[0], shares[1]), "src/res/overlay.png");
+        CryptIO.write(CryptUtil.overlayTwoShares(shares[0], shares[1]), "src/res/overlay.png");
     }
 }

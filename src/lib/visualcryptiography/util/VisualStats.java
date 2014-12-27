@@ -12,9 +12,9 @@ public class VisualStats {
 
     private VisualStats() {
     }
-
+    
     public static void runPSNR(BufferedImage img1, BufferedImage img2) {
-        CryptIO.notifySubProcess("Calculating PSNR...");
+        CryptIO.notify("Calculating PSNR...");
 
         double mse = 0.0;
         //inner dual sum for mse
@@ -35,7 +35,7 @@ public class VisualStats {
     }
 
     public static void runAverage(BufferedImage img) {
-        CryptIO.notifySubProcess("Calculating average...");
+        CryptIO.notify("Calculating averages...");
 
         int width = img.getWidth();
         int height = img.getHeight();
@@ -62,7 +62,7 @@ public class VisualStats {
     }
 
     public static void runAlphaLayerPlot(PixelDistribution pd) {
-        CryptIO.notifyProcess("Creating alpha layer plots...");
+        CryptIO.notify("Creating alpha layer plots...");
 
         Color[][] r = new Color[pd.getWidth()][pd.getHeight()];
         Color[][] g = new Color[pd.getWidth()][pd.getHeight()];
@@ -85,7 +85,7 @@ public class VisualStats {
         CryptIO.write(rI, "src/res/stats/rI.png");
         CryptIO.write(gI, "src/res/stats/gI.png");
         CryptIO.write(bI, "src/res/stats/bI.png");
-        CryptIO.notifyProcess("Finished creating alpha layer plot images.");
+        CryptIO.notify("Finished creating alpha layer plot images.");
     }
 
     public static boolean innerComparePixel(Pixel p1, Pixel p2) {

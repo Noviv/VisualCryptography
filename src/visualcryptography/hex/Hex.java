@@ -25,7 +25,7 @@ public class Hex implements EncryptionInterface {
             CryptIO.notifyErr("Quitting encryption because text is empty.");
             return;
         } else {
-            CryptIO.notifyProcess("Writing message: " + msg.substring(0, msg.length() - 1));
+            CryptIO.notify("Writing message: " + msg.substring(0, msg.length() - 1));
         }
 
         /*convert to hex string[]*/
@@ -52,7 +52,7 @@ public class Hex implements EncryptionInterface {
         }
 
         /*write pixels to image*/
-        CryptIO.notifyProcess("Processing pixels...");
+        CryptIO.notify("Processing pixels...");
         int cCounter = 0;
         double psuedoSide = Math.sqrt(pixelColors.length);
         int side = (psuedoSide > Math.floor(psuedoSide) ? 1 + (int) psuedoSide : (int) psuedoSide);
@@ -70,7 +70,7 @@ public class Hex implements EncryptionInterface {
         }
 
         /*write image*/
-        CryptIO.notifyProcess("Writing image...");
+        CryptIO.notify("Writing image...");
         if (!CryptIO.write(image, "src/res/hexOutputImage.png")) {
             CryptIO.notifyErr("Could not write hex image.");
         }
@@ -88,7 +88,7 @@ public class Hex implements EncryptionInterface {
         Color[][] pixelColors = CryptIO.readPixels("src/res/hexOutputImage.png");
 
         /*convert pixels to hex*/
-        CryptIO.notifyProcess("Converting pixels...");
+        CryptIO.notify("Converting pixels...");
         ArrayList<String> hexValues = new ArrayList<>();
         for (Color[] pixelColor : pixelColors) {
             for (Color pixelColor_ : pixelColor) {
@@ -112,10 +112,10 @@ public class Hex implements EncryptionInterface {
         }
 
         /*convert hex to unicode value*/
-        CryptIO.notifyProcess("Converting hex to unicode...");
+        CryptIO.notify("Converting hex to unicode...");
         String decoded = "";
         for (int i = 0; i < newHexValues.size(); i++) {
-            CryptIO.notifySubProcess("Iteration " + i + " of " + newHexValues.size());
+            CryptIO.notify("Iteration " + i + " of " + newHexValues.size());
             decoded += (char) Integer.parseInt(newHexValues.get(i), 16);
         }
 

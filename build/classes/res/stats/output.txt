@@ -8,4 +8,4 @@ PSNR: 3.694650332336666
 Output Message: this is a message
 
 Worked: true
-Duration: 26.288 seconds
+Duration: 23.046 seconds

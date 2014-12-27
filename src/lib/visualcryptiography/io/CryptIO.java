@@ -22,12 +22,8 @@ public class CryptIO {
     private CryptIO() {
     }
 
-    public static void notifyProcess(String msg) {
+    public static void notify(String msg) {
         System.out.println("~~" + msg);
-    }
-
-    public static void notifySubProcess(String msg) {
-        System.out.println("~~~~" + msg);
     }
 
     public static void notifyErr(Object msg) {
@@ -108,7 +104,7 @@ public class CryptIO {
             } catch (Exception e) {
                 CryptIO.notifyErr("failed to write image: " + e.getMessage());
             }
-            notifyProcess("CryptIO wrote: " + name + ".png");
+            notify("CryptIO wrote: " + name);
             return true;
         } catch (IOException e) {
             return false;
@@ -116,7 +112,7 @@ public class CryptIO {
     }
 
     public static void setup() throws IOException {
-        notifyProcess("CryptIO setup...");
+        notify("CryptIO setup...");
         initialMs = System.currentTimeMillis();
         dataFile = (dataFile == null ? dataFile = new File("src/res/data.txt") : dataFile);
         dataFile.createNewFile();
