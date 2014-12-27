@@ -5,19 +5,23 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import lib.visualcryptiography.crypt.MessageInput;
 import lib.visualcryptiography.crypt.Share;
-import lib.visualcryptiography.crypt.VisualScheme;
-import lib.visualcryptiography.io.CryptIO;
+import lib.visualcryptiography.util.CryptIO;
 import lib.visualcryptiography.util.PixelDistributionFactory;
 import lib.visualcryptiography.util.VisualStats;
 import lib.visualcryptiography.util.datastructures.PixelDistribution;
 
-public class OneByOne extends VisualScheme {
+public class OneByOne {
 
-    public OneByOne() {
-        super(1, 1);
+    public static boolean standalone;
+    private Share share;
+
+    public OneByOne(boolean standalone_) {
+        standalone = standalone_;
+        if (standalone_) {
+            System.out.close();
+        }
     }
 
-    @Override
     public void makeShares() {
         final String currentImagePath = "src/res/house.jpg";
 
@@ -29,8 +33,9 @@ public class OneByOne extends VisualScheme {
         CryptIO.notify("Pre-processing...");
         MessageInput input = new MessageInput(CryptIO.readText());
         CryptIO.notifyResult("INITIAL MESSAGE: " + input.getRaw(), false);
+        CryptIO.readAttributes(currentImagePath);
         Color[][] pixels = CryptIO.readPixels(currentImagePath);
-        Share s1 = new Share(1, pixels.length, pixels[0].length);
+        share = new Share(1, pixels.length, pixels[0].length);
 
         /*create distributions*/
         CryptIO.notify("Creating distributions...");
@@ -40,7 +45,7 @@ public class OneByOne extends VisualScheme {
         //scatter
         for (int x = 0; x < dist.getWidth(); x++) {
             for (int y = 0; y < dist.getHeight(); y++) {
-                s1.add(x, y, pixels[x][y]);
+                share.add(x, y, pixels[x][y]);
             }
         }
         int scatter = dist.getNumPixels() / input.getASCIIValues().size();
@@ -74,12 +79,12 @@ public class OneByOne extends VisualScheme {
             int a1 = 255 - a / 2;
             int a2 = 255 - (a % 2 == 0 ? a / 2 : (a / 2) + 1);
             if (xVal + 1 >= dist.getWidth()) {
-                s1.add(xVal, yVal, new Color(r, g, b, a1));
+                share.add(xVal, yVal, new Color(r, g, b, a1));
                 xVal = 0;
-                s1.add(xVal, yVal, new Color(r, g, b, a2));
+                share.add(xVal, yVal, new Color(r, g, b, a2));
             } else {
-                s1.add(xVal, yVal, new Color(r, g, b, a1));
-                s1.add(xVal + 1, yVal, new Color(r, g, b, a2));
+                share.add(xVal, yVal, new Color(r, g, b, a1));
+                share.add(xVal + 1, yVal, new Color(r, g, b, a2));
             }
 
             scatter += INITIAL_SCATTER;
@@ -87,16 +92,18 @@ public class OneByOne extends VisualScheme {
 
         /*stats*/
         VisualStats.runAlphaLayerPlot(dist);
-        VisualStats.runAverage(s1);
-        VisualStats.runPSNR(CryptIO.readImage(currentImagePath), s1);
+        VisualStats.runAverage(share);
+        VisualStats.runPSNR(CryptIO.readImage(currentImagePath), share);
 
         /*postprocess*/
         CryptIO.notify("Post-processing...");
-        shares[0] = s1;
-        CryptIO.write(s1, "src/res/share" + s1.getShareNum() + ".png");
+        CryptIO.write(share, "src/res/share" + share.getShareNum() + ".png");
+    }
+    
+    public Share getShare() {
+        return share;
     }
 
-    @Override
     public void decryptShares(Share... shares) {
         decryptImage(shares[0]);
     }

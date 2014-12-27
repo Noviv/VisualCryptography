@@ -3,7 +3,7 @@ package lib.visualcryptiography.crypt;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import lib.visualcryptiography.io.CryptIO;
+import lib.visualcryptiography.util.CryptIO;
 
 public class Share extends BufferedImage {
 

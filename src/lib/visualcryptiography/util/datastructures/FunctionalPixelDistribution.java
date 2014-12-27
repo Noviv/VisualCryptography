@@ -1,6 +1,6 @@
 package lib.visualcryptiography.util.datastructures;
 
-import lib.visualcryptiography.io.CryptIO;
+import lib.visualcryptiography.util.CryptIO;
 import lib.visualcryptiography.util.VisualStats;
 
 public class FunctionalPixelDistribution {

@@ -5,12 +5,12 @@ import visualcryptography.onebyone.OneByOne;
 public class VisualCryptography {
 
     public static void main(String[] args) throws Exception {
-        OneByOne main = new OneByOne();
+        OneByOne main = new OneByOne(false);
 
         System.out.println("\n\nEncrypting...");
         main.makeShares();
         System.out.println("Decrypting...");
-        main.decryptShares(main.getShares());
+        main.decryptShares(main.getShare());
         System.exit(0);
     }
 

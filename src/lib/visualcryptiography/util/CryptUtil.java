@@ -3,7 +3,6 @@ package lib.visualcryptiography.util;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import lib.visualcryptiography.crypt.Share;
-import lib.visualcryptiography.io.CryptIO;
 
 public class CryptUtil {
 

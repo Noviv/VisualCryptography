@@ -2,7 +2,6 @@ package lib.visualcryptiography.util;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import lib.visualcryptiography.io.CryptIO;
 import lib.visualcryptiography.util.datastructures.Pixel;
 import lib.visualcryptiography.util.datastructures.PixelDistribution;
 

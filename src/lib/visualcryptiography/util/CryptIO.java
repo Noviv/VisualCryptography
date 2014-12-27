@@ -1,4 +1,4 @@
-package lib.visualcryptiography.io;
+package lib.visualcryptiography.util;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -6,7 +6,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
 
@@ -20,6 +21,18 @@ public class CryptIO {
     private static BufferedWriter bw = null;
 
     private CryptIO() {
+    }
+
+    public static void readAttributes(String filePath) {
+        File f = new File(filePath);
+        if (!f.exists()) {
+            CryptIO.notifyErr("Image file does not exist! Create an image and restart encryption.");
+            System.exit(0);
+        }
+        try {
+            BasicFileAttributes att = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
+        } catch (Exception e) {
+        }
     }
 
     public static void notify(String msg) {

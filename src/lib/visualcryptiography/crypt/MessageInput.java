@@ -2,7 +2,7 @@ package lib.visualcryptiography.crypt;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import lib.visualcryptiography.io.CryptIO;
+import lib.visualcryptiography.util.CryptIO;
 
 public class MessageInput implements Iterator {
     
