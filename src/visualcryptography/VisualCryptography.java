@@ -1,34 +1,18 @@
 package visualcryptography;
 
-import visualcryptography.onebyone.OneByOne;
+import visualcryptography.encryptions.AlphaEncryption;
+import java.io.File;
+import javax.imageio.ImageIO;
 
 public class VisualCryptography {
 
     public static void main(String[] args) throws Exception {
-        OneByOne main = new OneByOne(false);
+        AlphaEncryption main = new AlphaEncryption();
 
-        System.out.println("\n\nEncrypting...");
-        main.makeShares();
-        System.out.println("Decrypting...");
-        main.decryptShares(main.getShare());
-        System.exit(0);
+        System.out.println("Encrypting...");
+        main.encrypt();
+        
+        System.out.println("\nDecrypting...");
+        main.decrypt(ImageIO.read(new File("src/res/share1.png")));
     }
-
-    /*
-     try {
-     Hex hex = new Hex();
-     System.out.println("\n\nEncrypting...");
-     hex.encrypt();
-     System.out.println("Decrypting...");
-     result = hex.decrypt();
-     System.out.println("Result: " + result + "\n\n");
-     } catch (CryptException e) {
-     }*/
-
-    /*
-     TwoByTwo vs = new TwoByTwo();
-     System.out.println("\n\nEncrypting...");
-     vs.makeShares();
-     System.out.println("Decrypting...");
-     vs.decryptShares(vs.getShares());*/
 }

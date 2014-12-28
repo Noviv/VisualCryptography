@@ -1,2 +1,11 @@
-INITIAL MESSAGE: this is a message
+INITIAL MESSAGE: this is a completerely differend misasd
 
+meanR: 140.6357880027634
+meanG: 141.96274005280713
+meanB: 128.3054807784926
+MSE: 2.56291311568538E13
+PSNR: 3.589511435348531
+Output Message: this is a completerely differend misasd
+
+Worked: true
+Duration: 25.342 seconds
