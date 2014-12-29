@@ -2,9 +2,11 @@ package visualcryptography.encryptions;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 import lib.visualcryptiography.crypt.MessageInput;
-import lib.visualcryptiography.crypt.Share;
+import lib.visualcryptiography.crypt.EncryptionImage;
 import lib.visualcryptiography.util.CryptIO;
 import lib.visualcryptiography.util.PixelDistributionFactory;
 import lib.visualcryptiography.util.VisualStats;
@@ -12,11 +14,9 @@ import lib.visualcryptiography.util.datastructures.PixelDistribution;
 
 public class AlphaEncryption {
 
-    private Share share;
+    private EncryptionImage image;
 
-    public void encrypt() {
-        final String currentImagePath = "src/res/house.jpg";
-
+    public void encrypt(String inputImagePath) {
         /*preprocess*/
         try {
             CryptIO.setup();
@@ -25,9 +25,9 @@ public class AlphaEncryption {
         CryptIO.notify("Pre-processing...");
         MessageInput input = new MessageInput(CryptIO.readText());
         CryptIO.notifyResult("INITIAL MESSAGE: " + input.getRaw(), false);
-        CryptIO.readAttributes(currentImagePath);
-        Color[][] pixels = CryptIO.readPixels(currentImagePath);
-        share = new Share(1, pixels.length, pixels[0].length);
+        CryptIO.readAttributes(inputImagePath);
+        Color[][] pixels = CryptIO.readPixels(inputImagePath);
+        image = new EncryptionImage(pixels.length, pixels[0].length);
 
         /*create distributions*/
         CryptIO.notify("Creating distributions...");
@@ -37,7 +37,7 @@ public class AlphaEncryption {
         //scatter
         for (int x = 0; x < dist.getWidth(); x++) {
             for (int y = 0; y < dist.getHeight(); y++) {
-                share.add(x, y, pixels[x][y]);
+                image.set(x, y, pixels[x][y]);
             }
         }
         int scatter = dist.getNumPixels() / input.getASCIIValues().size();
@@ -71,12 +71,12 @@ public class AlphaEncryption {
             int a1 = 255 - a / 2;
             int a2 = 255 - (a % 2 == 0 ? a / 2 : (a / 2) + 1);
             if (xVal + 1 >= dist.getWidth()) {
-                share.add(xVal, yVal, new Color(r, g, b, a1));
+                image.set(xVal, yVal, new Color(r, g, b, a1));
                 xVal = 0;
-                share.add(xVal, yVal, new Color(r, g, b, a2));
+                image.set(xVal, yVal, new Color(r, g, b, a2));
             } else {
-                share.add(xVal, yVal, new Color(r, g, b, a1));
-                share.add(xVal + 1, yVal, new Color(r, g, b, a2));
+                image.set(xVal, yVal, new Color(r, g, b, a1));
+                image.set(xVal + 1, yVal, new Color(r, g, b, a2));
             }
 
             scatter += INITIAL_SCATTER;
@@ -84,15 +84,22 @@ public class AlphaEncryption {
 
         /*stats*/
         VisualStats.runAlphaLayerPlot(dist);
-        VisualStats.runAverage(share);
-        VisualStats.runPSNR(CryptIO.readImage(currentImagePath), share);
+        VisualStats.runAverage(image);
+        VisualStats.runPSNR(CryptIO.readImage(inputImagePath), image);
 
         /*postprocess*/
         CryptIO.notify("Post-processing...");
-        CryptIO.write(share, "src/res/share" + share.getShareNum() + ".png");
+        CryptIO.write(image, "src/res/ouput.png");
     }
 
-    public void decrypt(BufferedImage image) {
+    public void decrypt(String outputImagePath) {
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File(outputImagePath));
+        } catch (Exception e) {
+            CryptIO.notifyErr("Image file " + outputImagePath + "could not be read.");
+            System.exit(1);
+        }
         CryptIO.notify("Reading alpha values...");
         Color c;
         ArrayList<Integer> data = new ArrayList<>();

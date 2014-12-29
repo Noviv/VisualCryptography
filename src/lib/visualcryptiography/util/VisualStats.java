@@ -87,10 +87,6 @@ public class VisualStats {
         CryptIO.notify("Finished creating alpha layer plot images.");
     }
 
-    public static boolean innerComparePixel(Pixel p1, Pixel p2) {
-        return Math.abs(p1.getRed() - p2.getRed()) < DIFF_CUTOFF_VALUE && Math.abs(p1.getGreen() - p2.getGreen()) < DIFF_CUTOFF_VALUE && Math.abs(p1.getBlue() - p2.getBlue()) < DIFF_CUTOFF_VALUE;
-    }
-
     /*private methods*/
     private static Color genColor(Color base, int alpha) {
         return new Color(base.getRed(), base.getGreen(), base.getBlue(), alpha);

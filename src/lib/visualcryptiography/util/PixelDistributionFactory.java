@@ -1,7 +1,6 @@
 package lib.visualcryptiography.util;
 
 import java.awt.Color;
-import lib.visualcryptiography.util.datastructures.FunctionalPixelDistribution;
 import lib.visualcryptiography.util.datastructures.Pixel;
 import lib.visualcryptiography.util.datastructures.PixelDistribution;
 
@@ -53,9 +52,5 @@ public class PixelDistributionFactory {
             }
         }
         return createDistribution(p);
-    }
-
-    public static FunctionalPixelDistribution createFunctionalDistribution(PixelDistribution distribution) {
-        return new FunctionalPixelDistribution(distribution);
     }
 }
