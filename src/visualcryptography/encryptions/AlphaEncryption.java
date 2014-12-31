@@ -5,12 +5,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import lib.visualcryptiography.crypt.MessageInput;
-import lib.visualcryptiography.crypt.EncryptionImage;
-import lib.visualcryptiography.util.CryptIO;
-import lib.visualcryptiography.util.PixelDistributionFactory;
-import lib.visualcryptiography.util.VisualStats;
-import lib.visualcryptiography.util.datastructures.PixelDistribution;
+import lib.crypt.MessageInput;
+import lib.crypt.EncryptionImage;
+import lib.util.CryptIO;
+import lib.util.CryptUtil;
+import lib.util.PixelDistributionFactory;
+import lib.util.VisualStats;
+import lib.util.datastructures.PixelDistribution;
 
 public class AlphaEncryption {
 
@@ -35,14 +36,17 @@ public class AlphaEncryption {
         CryptIO.notify("Finished creating distributions.");
 
         //scatter
+        long eTime = System.currentTimeMillis();
+        CryptIO.notify("ENCRYPTION STARTED");
         for (int x = 0; x < dist.getWidth(); x++) {
             for (int y = 0; y < dist.getHeight(); y++) {
                 image.set(x, y, pixels[x][y]);
             }
         }
+        System.err.println((dist.getWidth() * dist.getHeight()) / 256.0);
         int scatter = dist.getNumPixels() / input.getASCIIValues().size();
         final int INITIAL_SCATTER = scatter;
-        CryptIO.notify("Writing basic phase pixels to image...");
+        CryptIO.notify("Writing alpha pixels to image...");
         for (int x = 0; x < input.getASCIIValues().size(); x++) {
             int temp = scatter;
             int count = 0;
@@ -78,18 +82,24 @@ public class AlphaEncryption {
                 image.set(xVal, yVal, new Color(r, g, b, a1));
                 image.set(xVal + 1, yVal, new Color(r, g, b, a2));
             }
-
+            if (image.getRGB(xVal, yVal) != dist.getPixel(xVal, yVal).getRGB()) {
+                System.err.println("WTF");
+            }
             scatter += INITIAL_SCATTER;
         }
+        CryptIO.notify("ENCRYPTION FINISHED");
+        CryptIO.notifyResult("Encryption Duration: " + (System.currentTimeMillis() - eTime) / 1000.0 + "secs");
 
         /*stats*/
         VisualStats.runAlphaLayerPlot(dist);
         VisualStats.runAverage(image);
         VisualStats.runPSNR(CryptIO.readImage(inputImagePath), image);
+        VisualStats.runSSIM(CryptUtil.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
+        VisualStats.runDSSIM(CryptUtil.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
 
         /*postprocess*/
         CryptIO.notify("Post-processing...");
-        CryptIO.write(image, "src/res/ouput.png");
+        CryptIO.write(image, "src/res/output.png");
     }
 
     public void decrypt(String outputImagePath) {

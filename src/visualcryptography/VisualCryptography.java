@@ -1,8 +1,6 @@
 package visualcryptography;
 
 import visualcryptography.encryptions.AlphaEncryption;
-import java.io.File;
-import javax.imageio.ImageIO;
 
 public class VisualCryptography {
 
