@@ -6,8 +6,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
 
@@ -23,16 +21,13 @@ public class CryptIO {
     private CryptIO() {
     }
 
-    public static void readAttributes(String filePath) {
+    public static int readValue(String filePath) {
         File f = new File(filePath);
         if (!f.exists()) {
-            CryptIO.notifyErr("Image file does not exist! Create an image and restart encryption.");
-            System.exit(0);
+            CryptIO.notifyErr("Could not read input file path.");
+            System.exit(1);
         }
-        try {
-            BasicFileAttributes att = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
-        } catch (Exception e) {
-        }
+        return f.hashCode();
     }
 
     public static void notify(String msg) {
@@ -106,20 +101,20 @@ public class CryptIO {
         return pixels;
     }
 
-    public static boolean write(BufferedImage toWrite, String fileLoc) {
+    public static boolean write(BufferedImage toWrite, String fileLoc, String type) {
         try {
             File f = new File(fileLoc);
             if (f.createNewFile()) {
                 CryptIO.notify("Forced to create new file " + fileLoc);
             }
             try {
-                if (!ImageIO.write(toWrite, "png", f)) {
+                if (!ImageIO.write(toWrite, type, f)) {
                     return false;
                 }
             } catch (Exception e) {
                 CryptIO.notifyErr("failed to write image: " + e.getMessage());
             }
-            notify("CryptIO wrote: " + fileLoc);
+            notify("CryptIO wrote " + type + ": " + fileLoc);
             return true;
         } catch (IOException e) {
             return false;

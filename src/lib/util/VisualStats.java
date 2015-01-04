@@ -28,17 +28,8 @@ public class VisualStats {
                 c2 = new Color(post.getRGB(m, n), true);
 
                 mseR += Math.pow(c1.getRed() - c2.getRed(), 2);
-                if (c1.getRed() != c2.getRed()) {
-                    System.err.println("RED DIFF: " + c1.getRed() + ", " + c2.getRed());
-                }
                 mseG += Math.pow(c1.getGreen() - c2.getGreen(), 2);
-                if (c1.getGreen() != c2.getGreen()) {
-                    System.err.println("GREEN DIFF: " + c1.getGreen() + ", " + c2.getGreen());
-                }
                 mseB += Math.pow(c1.getBlue() - c2.getBlue(), 2);
-                if (c1.getBlue() != c2.getBlue()) {
-                    System.err.println("BLUE DIFF: " + c1.getBlue() + ", " + c2.getBlue());
-                }
                 mseA += Math.pow(c1.getAlpha() - c2.getAlpha(), 2);
             }
         }
@@ -118,9 +109,9 @@ public class VisualStats {
             }
         }
 
-        CryptIO.write(rI, "src/res/stats/rI.png");
-        CryptIO.write(gI, "src/res/stats/gI.png");
-        CryptIO.write(bI, "src/res/stats/bI.png");
+        CryptIO.write(rI, "src/res/stats/rI.png", "png");
+        CryptIO.write(gI, "src/res/stats/gI.png", "png");
+        CryptIO.write(bI, "src/res/stats/bI.png", "png");
     }
 
     public static void runSSIM(EncryptionImage pre, EncryptionImage post) {

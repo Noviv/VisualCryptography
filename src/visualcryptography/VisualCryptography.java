@@ -8,9 +8,9 @@ public class VisualCryptography {
         AlphaEncryption main = new AlphaEncryption();
 
         System.out.println("Encrypting...");
-        main.encrypt("src/res/input.jpg");
+        main.encrypt("src/res/input.png");
 
-        System.out.println("\nDecrypting...");
+        System.out.println("Decrypting...");
         main.decrypt("src/res/output.png");
     }
 }
