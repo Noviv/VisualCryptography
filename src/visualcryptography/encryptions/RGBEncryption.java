@@ -40,7 +40,7 @@ public class RGBEncryption {
         }
         int scatter = dist.getNumPixels() / input.getASCIIValues().size();
         final int INITIAL_SCATTER = scatter;
-        CryptIO.notify("Writing alpha pixels to image...");
+        CryptIO.notify("Writing subpixels to image...");
         for (int x = 0; x < input.getASCIIValues().size(); x++) {
             int temp = scatter;
             int count = 0;
@@ -64,9 +64,11 @@ public class RGBEncryption {
             }
 
             if (input.hasNext()) {
-                System.out.println("val1: " + (dist.getPixel(xVal, yVal).getRed() * dist.getPixel(xVal, yVal).getGreen() * dist.getPixel(xVal, yVal).getBlue()));
-                System.out.println("hash: " + CryptIO.readValue(inputImagePath));
-                System.out.println("val2: " + (CryptIO.readValue(inputImagePath) * (int) ((String) input.next()).charAt(0)));
+                double val1 = (dist.getPixel(xVal, yVal).getRed() * dist.getPixel(xVal, yVal).getGreen() * dist.getPixel(xVal, yVal).getBlue());
+                double val2 = ((55.0 / 256.0) * CryptIO.readValue(inputImagePath) * (int) ((String) input.next()).charAt(0));
+                System.out.println("val1: " + val1);
+                System.out.println("val2: " + val2);
+                System.out.println("diff: " + (val1 - val2));
             }
 
             //increment randomness

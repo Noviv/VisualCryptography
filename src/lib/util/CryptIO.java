@@ -15,19 +15,18 @@ public class CryptIO {
     private static long durationMs;
     private static File dataFile;
     private static BufferedImage image;
-    private static boolean on = true;
     private static BufferedWriter bw = null;
 
     private CryptIO() {
     }
 
-    public static int readValue(String filePath) {
+    public static double readValue(String filePath) {
         File f = new File(filePath);
         if (!f.exists()) {
             CryptIO.notifyErr("Could not read input file path.");
             System.exit(1);
         }
-        return f.hashCode();
+        return 100000000000000000.0 / f.lastModified();
     }
 
     public static void notify(String msg) {

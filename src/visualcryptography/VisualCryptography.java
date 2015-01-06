@@ -1,16 +1,16 @@
 package visualcryptography;
 
-import visualcryptography.encryptions.AlphaEncryption;
+import visualcryptography.encryptions.RGBEncryption;
 
 public class VisualCryptography {
 
     public static void main(String[] args) throws Exception {
-        AlphaEncryption main = new AlphaEncryption();
+        RGBEncryption main = new RGBEncryption();
 
         System.out.println("Encrypting...");
         main.encrypt("src/res/input.png");
 
         System.out.println("Decrypting...");
-        main.decrypt("src/res/output.png");
+//        main.decrypt("src/res/output.png");
     }
 }
