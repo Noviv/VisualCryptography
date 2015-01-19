@@ -15,18 +15,14 @@ public class CryptIO {
     private static long durationMs;
     private static File dataFile;
     private static BufferedImage image;
-    private static BufferedWriter bw = null;
+    private static boolean setup = false;
+    private static boolean close = false;
 
     private CryptIO() {
     }
 
-    public static double readValue(String filePath) {
-        File f = new File(filePath);
-        if (!f.exists()) {
-            CryptIO.notifyErr("Could not read input file path.");
-            System.exit(1);
-        }
-        return 100000000000000000.0 / f.lastModified();
+    public static void closeOutput() {
+        System.out.close();
     }
 
     public static void notify(String msg) {
@@ -38,16 +34,17 @@ public class CryptIO {
     }
 
     public static void notifyResult(Object msg, boolean outWrite) {
-        if (bw == null) {
-            try {
-                bw = new BufferedWriter(new FileWriter(new File("src/res/stats/output.txt")));
-            } catch (Exception e) {
-                CryptIO.notifyErr("Failed to initialize writer.");
-            }
+        BufferedWriter bw = null;
+        //try create
+        try {
+            bw = new BufferedWriter(new FileWriter(new File("src/res/stats/output.txt")));
+        } catch (Exception e) {
+            CryptIO.notifyErr("Failed to initialize writer.");
         }
+        //try write
         try {
             bw.write(msg + "\n");
-            bw.flush();
+            bw.close();
         } catch (Exception e) {
             CryptIO.notifyErr("Failed to write a result: " + msg);
         }
@@ -111,7 +108,7 @@ public class CryptIO {
                     return false;
                 }
             } catch (Exception e) {
-                CryptIO.notifyErr("failed to write image: " + e.getMessage());
+                CryptIO.notifyErr("Failed to write image: " + e.getMessage());
             }
             notify("CryptIO wrote " + type + ": " + fileLoc);
             return true;
@@ -132,8 +129,5 @@ public class CryptIO {
     public static void close() throws IOException {
         durationMs = System.currentTimeMillis() - initialMs;
         CryptIO.notifyResult("Duration: " + durationMs / 1000.0 + " seconds");
-        if (bw != null) {
-            bw.close();
-        }
     }
 }

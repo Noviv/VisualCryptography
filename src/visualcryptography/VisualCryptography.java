@@ -8,9 +8,9 @@ public class VisualCryptography {
         RGBEncryption main = new RGBEncryption();
 
         System.out.println("Encrypting...");
-        main.encrypt("src/res/input.png");
+        main.encrypt("src/res/trial1.png", "src/res/trial1output.png");
 
         System.out.println("Decrypting...");
-//        main.decrypt("src/res/output.png");
+        main.decrypt("src/res/trial1output.png");
     }
 }

@@ -20,6 +20,10 @@ public class Pixel extends Color {
         return y;
     }
 
+    public int getVMulti() {
+        return getRed() * getGreen() * getBlue();
+    }
+
     public enum PixelDirection {
 
         NORTH,

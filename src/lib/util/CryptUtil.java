@@ -48,14 +48,4 @@ public class CryptUtil {
     public static double toLuma(Color c) {
         return toLuma(c.getRed(), c.getGreen(), c.getBlue());
     }
-
-    public static EncryptionImage convertToEncryptionImage(BufferedImage image) {
-        EncryptionImage newImage = new EncryptionImage(image.getWidth(), image.getHeight());
-        for (int x = 0; x < image.getWidth(); x++) {
-            for (int y = 0; y < image.getHeight(); y++) {
-                newImage.set(x, y, image.getRGB(x, y));
-            }
-        }
-        return newImage;
-    }
 }

@@ -78,10 +78,7 @@ public class VisualStats {
         meanG /= img.getWidth() * img.getHeight();
         meanB /= img.getWidth() * img.getHeight();
         meanA /= img.getWidth() * img.getHeight();
-
-//        meanR = Math.round(meanR * 100.0) / 100.0;
-//        meanG = Math.round(meanG * 100.0) / 100.0;
-//        meanB = Math.round(meanB * 100.0) / 100.0;
+        
         CryptIO.notifyResult("meanR: " + meanR);
         CryptIO.notifyResult("meanG: " + meanG);
         CryptIO.notifyResult("meanB: " + meanB);

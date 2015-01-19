@@ -19,6 +19,7 @@ public class EncryptionImage extends BufferedImage {
     public void set(int x, int y, Color c) {
         setRGB(x, y, c.getRGB());
     }
+
     public void set(int x, int y, int rgb) {
         setRGB(x, y, rgb);
     }

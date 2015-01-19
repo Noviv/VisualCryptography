@@ -53,17 +53,6 @@ public class PixelDistribution {
         }
     }
 
-    public void printMajorSignals() {
-        for (Signal[] sA : signals) {
-            for (Signal s : sA) {
-                if (s.getMean() >= sigTotal / (4.0 * signals.length * signals[0].length)) {
-                    System.out.print(s + " ");
-                }
-            }
-            System.out.println();
-        }
-    }
-
     public Pixel getPixel(int x, int y) {
         return pixels[x][y];
     }

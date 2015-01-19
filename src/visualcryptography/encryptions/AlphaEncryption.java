@@ -9,7 +9,7 @@ import lib.crypt.MessageInput;
 import lib.crypt.EncryptionImage;
 import lib.util.CryptIO;
 import lib.util.CryptUtil;
-import lib.util.PixelDistributionFactory;
+import lib.util.CryptoFactory;
 import lib.util.VisualStats;
 import lib.util.datastructures.PixelDistribution;
 
@@ -17,7 +17,7 @@ public class AlphaEncryption {
 
     private EncryptionImage image;
 
-    public void encrypt(String inputImagePath) {
+    public void encrypt(String inputImagePath, String writeToPath) {
         /*preprocess*/
         try {
             CryptIO.setup();
@@ -31,7 +31,7 @@ public class AlphaEncryption {
 
         /*create distributions*/
         CryptIO.notify("Creating distributions...");
-        PixelDistribution dist = PixelDistributionFactory.createDistribution(pixels);
+        PixelDistribution dist = CryptoFactory.createDistribution(pixels);
         CryptIO.notify("Finished creating distributions.");
 
         //scatter
@@ -92,12 +92,12 @@ public class AlphaEncryption {
         VisualStats.runAlphaLayerPlot(dist);
         VisualStats.runAverage(image);
         VisualStats.runPSNR(CryptIO.readImage(inputImagePath), image);
-        VisualStats.runSSIM(CryptUtil.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
-        VisualStats.runDSSIM(CryptUtil.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
+        VisualStats.runSSIM(CryptoFactory.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
+        VisualStats.runDSSIM(CryptoFactory.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
 
         /*postprocess*/
         CryptIO.notify("Post-processing...");
-        CryptIO.write(image, "src/res/output.png", "png");
+        CryptIO.write(image, writeToPath, "png");
     }
 
     public void decrypt(String outputImagePath) {
@@ -106,7 +106,7 @@ public class AlphaEncryption {
             image = ImageIO.read(new File(outputImagePath));
         } catch (Exception e) {
             CryptIO.notifyErr("Image file " + outputImagePath + " could not be read.");
-            System.exit(1);
+            System.exit(256);
         }
         CryptIO.notify("Reading alpha values...");
         Color c;
