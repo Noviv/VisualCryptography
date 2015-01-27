@@ -7,7 +7,7 @@ public class Pixel extends Color {
     private final int x, y;
 
     public Pixel(int x, int y, Color c) {
-        super(c.getRGB());
+        super(c.getRGB(), true);
         this.x = x;
         this.y = y;
     }

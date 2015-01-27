@@ -44,15 +44,6 @@ public class PixelDistribution {
         return Math.pow(pS.getSum(), 2);
     }
 
-    public void printSignals() {
-        for (Signal[] sA : signals) {
-            for (Signal s : sA) {
-                System.out.print(s + " ");
-            }
-            System.out.println();
-        }
-    }
-
     public Pixel getPixel(int x, int y) {
         return pixels[x][y];
     }
@@ -71,17 +62,6 @@ public class PixelDistribution {
 
     public int getHeight() {
         return pixels[0].length;
-    }
-
-    public boolean verify() {
-        for (Signal[] sA : signals) {
-            for (Signal s : sA) {
-//                if (s.anyGreater(Signal.MAX_PIXEL_DIFF)) {
-//                    return false;
-//                }
-            }
-        }
-        return true;
     }
 
     public class Signal {

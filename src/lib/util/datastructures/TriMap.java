@@ -1,6 +1,7 @@
 package lib.util.datastructures;
 
 import java.util.HashMap;
+import lib.util.CryptIO;
 
 public class TriMap {
 
@@ -66,7 +67,7 @@ public class TriMap {
 
     public void print() {
         for (String key : map.keySet()) {
-            System.out.println(key + " -> " + map.get(key));
+            CryptIO.notify(key + " -> " + map.get(key));
         }
     }
 }

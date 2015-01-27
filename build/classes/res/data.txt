@@ -1,1 +1,1 @@
-hello this is a message
+This is a sample message, to be encrypted.

@@ -14,9 +14,6 @@ public class CryptIO {
     private static long initialMs;
     private static long durationMs;
     private static File dataFile;
-    private static BufferedImage image;
-    private static boolean setup = false;
-    private static boolean close = false;
 
     private CryptIO() {
     }
@@ -26,11 +23,11 @@ public class CryptIO {
     }
 
     public static void notify(String msg) {
-        System.out.println("~~" + msg);
+        System.out.println("--" + msg);
     }
 
     public static void notifyErr(Object msg) {
-        System.out.println("~~" + msg + "                                   !!");
+        System.out.println("!!" + msg);
     }
 
     public static void notifyResult(Object msg, boolean outWrite) {
@@ -49,7 +46,7 @@ public class CryptIO {
             CryptIO.notifyErr("Failed to write a result: " + msg);
         }
         if (outWrite) {
-            System.out.println(msg);
+            notify("" + msg);
         }
     }
 
@@ -82,6 +79,7 @@ public class CryptIO {
     }
 
     public static Color[][] readPixels(String filePath) {
+        BufferedImage image = null;
         try {
             File f = new File(filePath);
             f.createNewFile();

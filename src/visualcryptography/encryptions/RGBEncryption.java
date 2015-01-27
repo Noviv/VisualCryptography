@@ -15,7 +15,7 @@ import lib.util.datastructures.TriMap;
 
 public class RGBEncryption {
 
-    private double CONSTANT_CORRECTION = 70.0;//dt
+    private double CONSTANT_CORRECTION = 50000000.0;//dt
 
     private EncryptionImage image;
     private File imageFile;
@@ -53,20 +53,20 @@ public class RGBEncryption {
             }
         }
 
-        CryptIO.notify("Modifying signal pixels...");
-        for (int x = 0; x < dist.getWidth(); x++) {
-            for (int y = 0; y < dist.getHeight(); y++) {
-                if (dist.getPixel(x, y).getVMulti() == imageFile.lastModified() * (int) ((String) input.next()).charAt(0) / CONSTANT_CORRECTION) {
-                    //set signal pixel
-                    image.set(x, y, new Color(dist.getPixel(x, y).getRed(), dist.getPixel(x, y).getBlue(), dist.getPixel(x, y).getGreen(), 254));
-                    signalPixels.add(dist.getPixel(x, y));
-                    CryptIO.notify("Set signal pixel at: (" + x + ", " + y + ")");
-                } else {
-                    input.back();
-                }
-            }
-        }
-
+        //BRING THIS BACK
+//        CryptIO.notify("Modifying signal pixels...");
+//        for (int x = 0; x < dist.getWidth(); x++) {
+//            for (int y = 0; y < dist.getHeight(); y++) {
+//                if (dist.getPixel(x, y).getVMulti() == imageFile.lastModified() * ((String) input.next()).charAt(0) / CONSTANT_CORRECTION) {
+//                    //set signal pixel
+//                    image.set(x, y, new Color(dist.getPixel(x, y).getRed(), dist.getPixel(x, y).getBlue(), dist.getPixel(x, y).getGreen(), 254));
+//                    signalPixels.add(dist.getPixel(x, y));
+//                    CryptIO.notify("Set signal pixel at: (" + x + ", " + y + ")");
+//                } else {
+//                    input.back();
+//                }
+//            }
+//        }
         if (signalPixels.size() != input.getASCIIValues().size()) {
             CryptIO.notify("Forced to go into modify loop.");
 
@@ -75,34 +75,26 @@ public class RGBEncryption {
             double vM = 0.0;
             double result = 0.0;
             TriMap triMap = new TriMap();
-            double lastAverage = Double.MAX_VALUE;
-            double lastLastAverage = Double.MAX_VALUE;
-            while (triMap.getAverage() < lastAverage && triMap.getAverage() < lastLastAverage) {
+            boolean worked = false;
+            double goal = imageFile.lastModified() * input.getAverageASCII() / CONSTANT_CORRECTION;
+            while (!worked) {
                 CryptIO.notify("Forced constant correction iteration " + (iterations + 1));
                 for (int x = 0; x < dist.getWidth(); x++) {
                     for (int y = 0; y < dist.getHeight(); y++) {
-                        vM = dist.getPixel(x, y).getVMulti();
-                        result = (imageFile.lastModified() * input.getAverageASCII()) / CONSTANT_CORRECTION;
-                        triMap.put(x, y, vM - result);
+                        worked = (goal == dist.getPixel(x, y).getVMulti());
                     }
                 }
-                lastLastAverage = lastAverage;
-                lastAverage = triMap.getAverage();
-                triMap.clear();
-                CONSTANT_CORRECTION *= 1.05;//optional binary selection
+
+                CONSTANT_CORRECTION += 1000000;
                 iterations++;
+                goal = (imageFile.lastModified() * input.getAverageASCII()) / CONSTANT_CORRECTION;
             }
             CryptIO.notifyResult("Fixed CORRECTION_CONSTANT: " + CONSTANT_CORRECTION + " (" + (iterations + 1) + " iterations)");
 
             //modify signal pixels
             iterations = 0;
-            vM = 0.0;
-            result = 0.0;
-            triMap.clear();
-
-            iterations = 0;
-            double goal = imageFile.lastModified() * input.getNextCharInt() / CONSTANT_CORRECTION;
-            double currentPercentDiff = 0.03;
+            goal = imageFile.lastModified() * input.getNextCharInt() / CONSTANT_CORRECTION;
+            double currentPercentDiff = 0.1;
             while (signalPixels.size() != input.getASCIIValues().size()) {
                 CryptIO.notify("Forced into modify loop on iteration " + (iterations + 1));
                 for (int x = 0; x < dist.getWidth(); x++) {
@@ -122,10 +114,11 @@ public class RGBEncryption {
 
                 pixelModificationLoops:
                 {
-                    for (int r = (int) Math.ceil((1.0 - currentPercentDiff) * pR); r < Math.floor((1.0 + currentPercentDiff) * pR); r++) {
-                        for (int g = (int) Math.ceil((1.0 - currentPercentDiff) * pG); r < Math.floor((1.0 + currentPercentDiff) * pB); g++) {
-                            for (int b = (int) Math.ceil((1.0 - currentPercentDiff) * pB); r < Math.floor((1.0 + currentPercentDiff) * pB); b++) {
+                    for (int r = (int) (1.0 - currentPercentDiff * pR); r < (1.0 + currentPercentDiff * pR); r++) {
+                        for (int g = (int) (1.0 - currentPercentDiff * pG); g < (1.0 + currentPercentDiff * pG); g++) {
+                            for (int b = (int) (1.0 - currentPercentDiff * pB); b < (1.0 + currentPercentDiff * pB); b++) {
                                 if (r * g * b == goal) {
+                                    CryptIO.notify("Found matching pair.");
                                     nR = r;
                                     nG = g;
                                     nB = b;
@@ -140,6 +133,12 @@ public class RGBEncryption {
                 image.set(xMin, yMin, new Color(nR, nG, nB, nA));
                 signalPixels.add(dist.getPixel(xMin, yMin));
                 iterations++;
+
+                if (input.hasNext()) {
+                    goal = imageFile.lastModified() * input.getNextCharInt() / CONSTANT_CORRECTION;
+                } else {
+                    break;
+                }
             }
         }
 
@@ -182,19 +181,22 @@ public class RGBEncryption {
             System.exit(256);
         }
         //decryption
+        ArrayList<Pixel> signals = new ArrayList<>();
         String message = "";
         Color c;
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
-                CryptIO.notify("matching (" + x + ", " + y + ")");
                 c = new Color(image.getRGB(x, y), true);
-                for (int i = 0; i < 510; i++) {
-                    if ((double) c.getRed() * c.getGreen() * c.getBlue() == (f.lastModified() * i) / 70.0) {
-                        message += (char) i;
-                        System.out.println("(" + i + ") -> " + ((char) i) + "       FOUND");
-                    }
+                if (c.getAlpha() == 254) {
+                    signals.add(new Pixel(x, y, c));
                 }
             }
+        }
+
+        CryptIO.notifyResult("Number of signals: " + signals.size());
+        for (Pixel p : signals) {
+            message += (char) (p.getVMulti() * 1000000.0) / f.lastModified();
+            CryptIO.notify("FOUND: " + (p.getVMulti() * 70.0) / f.lastModified() + " = " + (char) (p.getVMulti() * 70.0) / f.lastModified());
         }
 
         /*post results*/

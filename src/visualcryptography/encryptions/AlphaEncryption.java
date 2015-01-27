@@ -8,7 +8,6 @@ import javax.imageio.ImageIO;
 import lib.crypt.MessageInput;
 import lib.crypt.EncryptionImage;
 import lib.util.CryptIO;
-import lib.util.CryptUtil;
 import lib.util.CryptoFactory;
 import lib.util.VisualStats;
 import lib.util.datastructures.PixelDistribution;
@@ -80,9 +79,6 @@ public class AlphaEncryption {
                 image.set(xVal, yVal, new Color(r, g, b, a1));
                 image.set(xVal + 1, yVal, new Color(r, g, b, a2));
             }
-//            if (image.getRGB(xVal, yVal) != dist.getPixel(xVal, yVal).getRGB()) {
-//                System.err.println("WTF");
-//            }
             scatter += INITIAL_SCATTER;
         }
         CryptIO.notify("ENCRYPTION FINISHED");
