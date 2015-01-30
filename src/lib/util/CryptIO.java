@@ -23,7 +23,7 @@ public class CryptIO {
     public static void closeOutput() {
         System.out.close();
     }
-    
+
     public static void setGUI(GUI gui_) {
         gui = gui_;
     }

@@ -9,9 +9,9 @@ import lib.util.VisualStats;
 import lib.util.datastructures.PixelDistribution;
 
 public class RGBModEncryption {
-
+    
     private EncryptionImage image;
-
+    
     public void encrypt(String inputImagePath, String writeToPath) {
         /*preprocess*/
         try {
@@ -31,6 +31,8 @@ public class RGBModEncryption {
 
         /*encryption start*/
         long eTime = System.currentTimeMillis();
+        long timeConstant = eTime % 255;
+        CryptIO.notifyResult("Time Constant: " + timeConstant);
 
         /*encryption stop*/
         CryptIO.notify("ENCRYPTION FINISHED");

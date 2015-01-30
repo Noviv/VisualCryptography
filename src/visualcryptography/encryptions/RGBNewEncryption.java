@@ -75,13 +75,18 @@ public class RGBNewEncryption {
         }
 
         //fix
-//        while (input.hasNext()) {
-//        }
+        System.exit(1000);
+        while (input.hasNext()) {
+        }
 
         //check working
         /*encryption post*/
         CryptIO.notify("ENCRYPTION FINISHED");
         CryptIO.notifyResult("Encryption Duration: " + (System.currentTimeMillis() - eTime) / 1000.0 + "secs");
+
+        /*postprocess*/
+        CryptIO.notify("Post-processing...");
+        CryptIO.write(image, outputImagePath, "png");
 
         /*stats*/
         VisualStats.runAlphaLayerPlot(dist);
@@ -90,9 +95,6 @@ public class RGBNewEncryption {
         VisualStats.runSSIM(CryptoFactory.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
         VisualStats.runDSSIM(CryptoFactory.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
 
-        /*postprocess*/
-        CryptIO.notify("Post-processing...");
-        CryptIO.write(image, outputImagePath, "png");
         try {
             CryptIO.close();
         } catch (Exception e) {

@@ -113,7 +113,6 @@ public class RGBEncryption {
 
                 pixelModificationLoops:
                 {
-                    //NEED TO ADD ()
                     for (int r = (int) (1.0 - currentPercentDiff * pR); r < (1.0 + currentPercentDiff * pR); r++) {
                         for (int g = (int) (1.0 - currentPercentDiff * pG); g < (1.0 + currentPercentDiff * pG); g++) {
                             for (int b = (int) (1.0 - currentPercentDiff * pB); b < (1.0 + currentPercentDiff * pB); b++) {
@@ -134,16 +133,21 @@ public class RGBEncryption {
                 signalPixels.add(dist.getPixel(xMin, yMin));
                 iterations++;
 
-                if (!input.hasNext()) {
+                if (input.hasNext()) {
+                    goal = imageFile.lastModified() * input.getNextCharInt() / CONSTANT_CORRECTION;
+                } else {
                     break;
                 }
-                goal = imageFile.lastModified() * input.getNextCharInt() / CONSTANT_CORRECTION;
             }
         }
 
         /*encryption post*/
         CryptIO.notify("ENCRYPTION FINISHED");
         CryptIO.notifyResult("Encryption Duration: " + (System.currentTimeMillis() - eTime) / 1000.0 + "secs");
+
+        /*postprocess*/
+        CryptIO.notify("Post-processing...");
+        CryptIO.write(image, writeToPath, "png");
 
         /*stats*/
         VisualStats.runAlphaLayerPlot(dist);
@@ -152,9 +156,6 @@ public class RGBEncryption {
         VisualStats.runSSIM(CryptoFactory.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
         VisualStats.runDSSIM(CryptoFactory.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
 
-        /*postprocess*/
-        CryptIO.notify("Post-processing...");
-        CryptIO.write(image, writeToPath, "png");
         try {
             CryptIO.close();
         } catch (Exception e) {

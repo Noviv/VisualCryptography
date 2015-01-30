@@ -84,16 +84,16 @@ public class AlphaEncryption {
         CryptIO.notify("ENCRYPTION FINISHED");
         CryptIO.notifyResult("Encryption Duration: " + (System.currentTimeMillis() - eTime) / 1000.0 + "secs");
 
+        /*postprocess*/
+        CryptIO.notify("Post-processing...");
+        CryptIO.write(image, writeToPath, "png");
+
         /*stats*/
         VisualStats.runAlphaLayerPlot(dist);
         VisualStats.runAverage(image);
         VisualStats.runPSNR(CryptIO.readImage(inputImagePath), image);
         VisualStats.runSSIM(CryptoFactory.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
         VisualStats.runDSSIM(CryptoFactory.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
-
-        /*postprocess*/
-        CryptIO.notify("Post-processing...");
-        CryptIO.write(image, writeToPath, "png");
     }
 
     public void decrypt(String outputImagePath) {
