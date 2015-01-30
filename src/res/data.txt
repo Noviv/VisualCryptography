@@ -1,1 +1,1 @@
-This is a sample message, to be encrypted.
+data hello

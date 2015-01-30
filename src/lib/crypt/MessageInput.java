@@ -65,6 +65,10 @@ public class MessageInput implements Iterator {
     public String getRaw() {
         return message;
     }
+    
+    public int getPosition() {
+        return position;
+    }
 
     public ArrayList<String> getASCIIValues() {
         return data;

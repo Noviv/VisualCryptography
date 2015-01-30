@@ -154,7 +154,6 @@ public class VisualStats {
         double c2 = Math.pow(k2 * L, 2);
 
         double val = ((2 * muX * muY + c1) * (2 * sigmaXY + c2)) / ((muX * muX + muY * muY + c1) * (sigmaX * sigmaX + sigmaY * sigmaY + c2));
-//        val = Math.round(100.0 * val) / 100.0;
         return val;
     }
 }

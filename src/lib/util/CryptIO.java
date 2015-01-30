@@ -8,12 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
+import pretty.GUI;
 
 public class CryptIO {
 
     private static long initialMs;
     private static long durationMs;
     private static File dataFile;
+    private static GUI gui = null;
 
     private CryptIO() {
     }
@@ -21,13 +23,23 @@ public class CryptIO {
     public static void closeOutput() {
         System.out.close();
     }
+    
+    public static void setGUI(GUI gui_) {
+        gui = gui_;
+    }
 
     public static void notify(String msg) {
+        if (gui != null) {
+            gui.append(msg);
+        }
         System.out.println("--" + msg);
     }
 
     public static void notifyErr(Object msg) {
-        System.out.println("!!" + msg);
+        if (gui != null) {
+            gui.append("!! " + msg);
+        }
+        System.out.println("!! " + msg);
     }
 
     public static void notifyResult(Object msg, boolean outWrite) {

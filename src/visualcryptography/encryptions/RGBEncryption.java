@@ -53,20 +53,19 @@ public class RGBEncryption {
             }
         }
 
-        //BRING THIS BACK
-//        CryptIO.notify("Modifying signal pixels...");
-//        for (int x = 0; x < dist.getWidth(); x++) {
-//            for (int y = 0; y < dist.getHeight(); y++) {
-//                if (dist.getPixel(x, y).getVMulti() == imageFile.lastModified() * ((String) input.next()).charAt(0) / CONSTANT_CORRECTION) {
-//                    //set signal pixel
-//                    image.set(x, y, new Color(dist.getPixel(x, y).getRed(), dist.getPixel(x, y).getBlue(), dist.getPixel(x, y).getGreen(), 254));
-//                    signalPixels.add(dist.getPixel(x, y));
-//                    CryptIO.notify("Set signal pixel at: (" + x + ", " + y + ")");
-//                } else {
-//                    input.back();
-//                }
-//            }
-//        }
+        CryptIO.notify("Modifying signal pixels...");
+        for (int x = 0; x < dist.getWidth(); x++) {
+            for (int y = 0; y < dist.getHeight(); y++) {
+                if (dist.getPixel(x, y).getVMulti() == imageFile.lastModified() * ((String) input.next()).charAt(0) / CONSTANT_CORRECTION) {
+                    //set signal pixel
+                    image.set(x, y, new Color(dist.getPixel(x, y).getRed(), dist.getPixel(x, y).getBlue(), dist.getPixel(x, y).getGreen(), 254));
+                    signalPixels.add(dist.getPixel(x, y));
+                    CryptIO.notify("Set signal pixel at: (" + x + ", " + y + ")");
+                } else {
+                    input.back();
+                }
+            }
+        }
         if (signalPixels.size() != input.getASCIIValues().size()) {
             CryptIO.notify("Forced to go into modify loop.");
 
@@ -114,6 +113,7 @@ public class RGBEncryption {
 
                 pixelModificationLoops:
                 {
+                    //NEED TO ADD ()
                     for (int r = (int) (1.0 - currentPercentDiff * pR); r < (1.0 + currentPercentDiff * pR); r++) {
                         for (int g = (int) (1.0 - currentPercentDiff * pG); g < (1.0 + currentPercentDiff * pG); g++) {
                             for (int b = (int) (1.0 - currentPercentDiff * pB); b < (1.0 + currentPercentDiff * pB); b++) {
@@ -134,11 +134,10 @@ public class RGBEncryption {
                 signalPixels.add(dist.getPixel(xMin, yMin));
                 iterations++;
 
-                if (input.hasNext()) {
-                    goal = imageFile.lastModified() * input.getNextCharInt() / CONSTANT_CORRECTION;
-                } else {
+                if (!input.hasNext()) {
                     break;
                 }
+                goal = imageFile.lastModified() * input.getNextCharInt() / CONSTANT_CORRECTION;
             }
         }
 
