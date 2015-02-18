@@ -1,8 +1,6 @@
 package lib.util;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import lib.crypt.EncryptionImage;
 
 public class CryptUtil {
 
@@ -37,15 +35,15 @@ public class CryptUtil {
         return ary;
     }
 
-    public static double toLuma(int r, int g, int b) {
-        return Math.sqrt(0.299 * r * r + 0.587 * g * g + 0.114 * b * b);
+    public static double toLuma(int r, int g, int b, int a) {
+        return (0.2126 * r + 0.7152 * g + 0.0722 * b) * (a / 255.0);
     }
 
     public static double toLuma(int rgb) {
-        return toLuma((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, (rgb) & 0xFF);
+        return toLuma((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, (rgb) & 0xFF, (rgb >> 24) & 0xff);
     }
 
     public static double toLuma(Color c) {
-        return toLuma(c.getRed(), c.getGreen(), c.getBlue());
+        return toLuma(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
     }
 }

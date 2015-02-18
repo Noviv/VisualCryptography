@@ -18,6 +18,7 @@ public class AlphaEncryption {
 
     public void encrypt(String inputImagePath, String writeToPath) {
         /*preprocess*/
+        CryptIO.clearOutput();
         try {
             CryptIO.setup();
         } catch (Exception e) {
@@ -25,6 +26,7 @@ public class AlphaEncryption {
         CryptIO.notify("Pre-processing...");
         MessageInput input = new MessageInput(CryptIO.readText());
         CryptIO.notifyResult("INITIAL MESSAGE: " + input.getRaw(), false);
+        double[] initialAvg = VisualStats.runAverage(CryptIO.readImage(inputImagePath), false);
         Color[][] pixels = CryptIO.readPixels(inputImagePath);
         image = new EncryptionImage(pixels.length, pixels[0].length);
 
@@ -90,12 +92,16 @@ public class AlphaEncryption {
 
         /*stats*/
         VisualStats.runAlphaLayerPlot(dist);
-        VisualStats.runAverage(image);
+        double[] finalAvg = VisualStats.runAverage(image, false);
+        CryptIO.notifyResult("meanDiffR: " + (Math.abs(initialAvg[0] - finalAvg[0])));
+        CryptIO.notifyResult("meanDiffG: " + (Math.abs(initialAvg[1] - finalAvg[1])));
+        CryptIO.notifyResult("meanDiffB: " + (Math.abs(initialAvg[2] - finalAvg[2])));
+        CryptIO.notifyResult("meanDiffA: " + (Math.abs(initialAvg[3] - finalAvg[3])));
         VisualStats.runPSNR(CryptIO.readImage(inputImagePath), image);
         VisualStats.runSSIM(CryptoFactory.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
         VisualStats.runDSSIM(CryptoFactory.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
     }
-
+    
     public void decrypt(String outputImagePath) {
         BufferedImage image = null;
         try {

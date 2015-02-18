@@ -7,8 +7,6 @@ import lib.util.datastructures.PixelDistribution;
 
 public class VisualStats {
 
-    private static final int DIFF_CUTOFF_VALUE = 7;
-
     private VisualStats() {
     }
 
@@ -55,7 +53,7 @@ public class VisualStats {
         CryptIO.notifyResult("PSNR_A: " + psnrA);
     }
 
-    public static void runAverage(BufferedImage img) {
+    public static double[] runAverage(BufferedImage img, boolean output) {
         CryptIO.notify("Calculating averages...");
 
         //averages
@@ -78,11 +76,14 @@ public class VisualStats {
         meanG /= img.getWidth() * img.getHeight();
         meanB /= img.getWidth() * img.getHeight();
         meanA /= img.getWidth() * img.getHeight();
-        
-        CryptIO.notifyResult("meanR: " + meanR);
-        CryptIO.notifyResult("meanG: " + meanG);
-        CryptIO.notifyResult("meanB: " + meanB);
-        CryptIO.notifyResult("meanA: " + meanA);
+
+        if (output) {
+            CryptIO.notifyResult("meanR: " + meanR);
+            CryptIO.notifyResult("meanG: " + meanG);
+            CryptIO.notifyResult("meanB: " + meanB);
+            CryptIO.notifyResult("meanA: " + meanA);
+        }
+        return new double[]{meanR, meanG, meanB, meanA};
     }
 
     public static void runAlphaLayerPlot(PixelDistribution pd) {

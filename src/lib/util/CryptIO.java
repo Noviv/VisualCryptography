@@ -20,6 +20,16 @@ public class CryptIO {
     private CryptIO() {
     }
 
+    public static void clearOutput() {
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File("src/res/stats/output.txt"), false));
+            bw.close();
+            CryptIO.notify("Cleared output file.");
+        } catch (Exception e) {
+            CryptIO.notifyErr("Could not clear output: " + e.getMessage());
+        }
+    }
+
     public static void closeOutput() {
         System.out.close();
     }
@@ -46,7 +56,7 @@ public class CryptIO {
         BufferedWriter bw = null;
         //try create
         try {
-            bw = new BufferedWriter(new FileWriter(new File("src/res/stats/output.txt")));
+            bw = new BufferedWriter(new FileWriter(new File("src/res/stats/output.txt"), true));
         } catch (Exception e) {
             CryptIO.notifyErr("Failed to initialize writer.");
         }
@@ -78,6 +88,14 @@ public class CryptIO {
         } while (reader.hasNext());
         reader.close();
         return data;
+    }
+
+    public static byte[] readBytes() {
+        try {
+
+        } catch (Exception e) {
+        }
+        return null;
     }
 
     public static BufferedImage readImage(String filePath) {
