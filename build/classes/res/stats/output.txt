@@ -1,1 +1,4 @@
-Duration: 40.71 seconds
+Message Length: 43
+INITIAL MESSAGE: This is a sample message, to be encrypted.
+
+Encryption Duration: 2.095secs
