@@ -6,8 +6,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Scanner;
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.metadata.IIOMetadataNode;
+import javax.imageio.stream.ImageOutputStream;
+import static javax.print.attribute.ResolutionSyntax.DPI;
 import pretty.GUI;
 
 public class CryptIO {
@@ -88,6 +97,7 @@ public class CryptIO {
         } while (reader.hasNext());
         reader.close();
         return data;
+
     }
 
     public static byte[] readBytes() {
@@ -131,6 +141,7 @@ public class CryptIO {
             if (f.createNewFile()) {
                 CryptIO.notify("Forced to create new file " + fileLoc);
             }
+            //write
             try {
                 if (!ImageIO.write(toWrite, type, f)) {
                     return false;
@@ -142,6 +153,59 @@ public class CryptIO {
             return true;
         } catch (IOException e) {
             return false;
+        }
+    }
+
+    public static boolean writeNew(BufferedImage toWrite, String fileLoc, String type, ImageWriteParam param) {
+        try {
+            for (Iterator<ImageWriter> iw = ImageIO.getImageWritersByFormatName(type); iw.hasNext();) {
+                ImageWriter writer = iw.next();
+                ImageTypeSpecifier typeSpecifier = ImageTypeSpecifier
+                        .createFromBufferedImageType(BufferedImage.TYPE_INT_RGB);
+                IIOMetadata metadata = writer.getDefaultImageMetadata(
+                        typeSpecifier, param);
+                if (metadata.isReadOnly()
+                        || !metadata.isStandardMetadataFormatSupported()) {
+                    continue;
+                }
+
+                setDPI(metadata, DPI);
+
+                ImageOutputStream stream = ImageIO.createImageOutputStream(new File(fileLoc));
+                writer.setOutput(stream);
+                writer.write(metadata, new IIOImage(toWrite, null, metadata), param);
+                stream.close();
+                break;
+            }
+        } catch (Exception e) {
+            CryptIO.notifyErr("Could not write image: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public static void setDPI(IIOMetadata metadata, int DPI) {
+        try {
+            double INCH_2_CM = 2.54;
+
+            // for PNG, it's dots per millimeter
+            double dotsPerMilli = 1.0 * DPI / 10 / INCH_2_CM;
+
+            IIOMetadataNode horiz = new IIOMetadataNode("HorizontalPixelSize");
+            horiz.setAttribute("value", Double.toString(dotsPerMilli));
+
+            IIOMetadataNode vert = new IIOMetadataNode("VerticalPixelSize");
+            vert.setAttribute("value", Double.toString(dotsPerMilli));
+
+            IIOMetadataNode dim = new IIOMetadataNode("Dimension");
+            dim.appendChild(horiz);
+            dim.appendChild(vert);
+
+            IIOMetadataNode root = new IIOMetadataNode("javax_imageio_1.0");
+            root.appendChild(dim);
+
+            metadata.mergeTree("javax_imageio_1.0", root);
+        } catch (Exception e) {
+            CryptIO.notifyErr("Cannot set DPI: " + e.getMessage());
         }
     }
 

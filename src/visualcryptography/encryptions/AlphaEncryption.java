@@ -5,12 +5,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
 import lib.crypt.MessageInput;
 import lib.crypt.EncryptionImage;
 import lib.util.CryptIO;
 import lib.util.CryptoFactory;
 import lib.util.VisualStats;
 import lib.util.datastructures.PixelDistribution;
+import lib.writer.CryptPNGImageWriteParam;
 
 public class AlphaEncryption {
 
@@ -29,6 +32,7 @@ public class AlphaEncryption {
         double[] initialAvg = VisualStats.runAverage(CryptIO.readImage(inputImagePath), false);
         Color[][] pixels = CryptIO.readPixels(inputImagePath);
         image = new EncryptionImage(pixels.length, pixels[0].length);
+        String fileFormat = inputImagePath.substring(inputImagePath.indexOf(".") + 1);
 
         /*create distributions*/
         CryptIO.notify("Creating distributions...");
@@ -43,7 +47,7 @@ public class AlphaEncryption {
                 image.set(x, y, pixels[x][y]);
             }
         }
-        int scatter = dist.getNumPixels() / input.getASCIIValues().size();
+        int scatter = dist.getNumPixels() / (input.getASCIIValues().size() + 1);
         final int INITIAL_SCATTER = scatter;
         CryptIO.notify("Writing alpha pixels to image...");
         for (int x = 0; x < input.getASCIIValues().size(); x++) {
@@ -86,9 +90,21 @@ public class AlphaEncryption {
         CryptIO.notify("ENCRYPTION FINISHED");
         CryptIO.notifyResult("Encryption Duration: " + (System.currentTimeMillis() - eTime) / 1000.0 + "secs");
 
+        /*test compression*/
+        try {
+            ImageWriter iw = ImageIO.getImageWritersByFormatName(fileFormat).next();
+            CryptIO.notifyResult("Compression avaliable: " + iw.getDefaultWriteParam().canWriteCompressed());
+            CryptPNGImageWriteParam iwparam = new CryptPNGImageWriteParam();
+            iwparam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            iwparam.setCompressionQuality(1f);
+        } catch (Exception e) {
+            CryptIO.notifyErr("Could not create image write param: " + e.getMessage());
+        }
+
         /*postprocess*/
         CryptIO.notify("Post-processing...");
-        CryptIO.write(image, writeToPath, "png");
+//        CryptIO.writeNew(image, writeToPath, fileFormat, iwparam);
+        CryptIO.write(image, writeToPath, fileFormat);
 
         /*stats*/
         VisualStats.runAlphaLayerPlot(dist);
@@ -101,7 +117,7 @@ public class AlphaEncryption {
         VisualStats.runSSIM(CryptoFactory.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
         VisualStats.runDSSIM(CryptoFactory.convertToEncryptionImage(CryptIO.readImage(inputImagePath)), image);
     }
-    
+
     public void decrypt(String outputImagePath) {
         BufferedImage image = null;
         try {

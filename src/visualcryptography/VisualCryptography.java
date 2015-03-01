@@ -6,14 +6,13 @@ import visualcryptography.encryptions.AlphaEncryption;
 public class VisualCryptography {
 
     public static void main(String[] args) throws Exception {
-
         AlphaEncryption main = new AlphaEncryption();
 
         CryptIO.notify("Encrypting...");
-        main.encrypt("src/res/trial5.png", "src/res/trial5output.png");
+        main.encrypt("src/res/trial4.png", "src/res/trial4output.png");
 
         CryptIO.notify("Decrypting...");
-        main.decrypt("src/res/trial5output.png");
+        main.decrypt("src/res/trial4output.png");
 //        
 //        RGBEncryption main = new RGBEncryption();
 //
