@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
@@ -147,6 +148,9 @@ public class CryptIO {
                     return false;
                 }
             } catch (Exception e) {
+                if (e instanceof FileNotFoundException) {
+                    write(toWrite, fileLoc, type);
+                }
                 CryptIO.notifyErr("Failed to write image: " + e.getMessage());
             }
             notify("CryptIO wrote " + type + ": " + fileLoc);

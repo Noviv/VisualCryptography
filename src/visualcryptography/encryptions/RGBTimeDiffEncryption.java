@@ -41,7 +41,7 @@ public class RGBTimeDiffEncryption {
         CryptIO.notify("Finished creating distributions.");
 
         /*encryption start*/
-        CryptIO.notify("Started encryption...");
+        CryptIO.notify ("Started encryption...");
         long eTime = System.currentTimeMillis();
         //time
         long timeDiff = -1;
@@ -68,6 +68,7 @@ public class RGBTimeDiffEncryption {
         //attempt to normal write
         for (int x = 0; x < dist.getWidth(); x++) {
             for (int y = 0; y < dist.getHeight(); y++) {
+                CryptIO.notify("Attempting " + dist.getPixel(x, y).getVMulti() + " for goal " + goal);
                 if (dist.getPixel(x, y).getVMulti() == goal) {
                     signalPixels.add(dist.getPixel(x, y));
                     CryptIO.notify("Added signal pixel " + input.getPosition() + " of " + input.getRaw().length() + ".");
@@ -77,7 +78,7 @@ public class RGBTimeDiffEncryption {
         }
 
         if (input.hasNext()) {
-            CryptIO.notifyErr("Did not finish!");
+            CryptIO.notifyErr("Did not finish! " + (input.getRaw().length() - signalPixels.size()) + " out of " + input.getRaw().length() + " piexls remaining.");
             System.exit(256);
         }
 
